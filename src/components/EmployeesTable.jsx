@@ -156,7 +156,9 @@ export default function EmployeesTable() {
           </span>
 
           <button
-            disabled={currentPage === totalPages || loading}
+            disabled={
+              currentPage === totalPages || loading || employees.length === 0
+            }
             onClick={() => setCurrentPage(currentPage + 1)}
             className="btn btn-primary mx-2"
           >
