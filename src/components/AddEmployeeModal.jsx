@@ -40,10 +40,7 @@ export default function AddEmployeeModal({ setEmployees, employees }) {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await UseAxios(
-          "GET",
-          "https://employee-management-task.onrender.com/countries/"
-        );
+        const response = await UseAxios("GET", "/api/v1/countries/");
         setCountries(response);
       } catch (e) {
         console.log(e);
@@ -72,11 +69,7 @@ export default function AddEmployeeModal({ setEmployees, employees }) {
     LazyLoading("Adding employee");
     const submitEmployee = async (data) => {
       try {
-        const response = await UseAxios(
-          "POST",
-          "https://employee-management-task.onrender.com/api/employees",
-          data
-        );
+        const response = await UseAxios("POST", "/api/v1/employees", data);
         ApiResponseModal("Success", "Successfully Added", "success");
         setEmployees([...employees, response]);
         toggleOpen();

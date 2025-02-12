@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  MDBBtn,
   MDBTable,
   MDBTableHead,
   MDBTableBody,
@@ -13,25 +12,28 @@ import DeleteEmployeeModal from "./DeleteEmployeeModal";
 import UpdateEmployeeModal from "./UpdateEmployeeModal";
 
 export default function EmployeesTable() {
-  // State to hold the employee data, including the new fields
-
-  const [employees, setEmployees] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 5; // Employees per page
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const response = await UseAxios(
           "Get",
-          "https://employee-management-task.onrender.com/api/employees"
+          `/api/v1/employees/${currentPage}/${limit}`
         );
 
-        setEmployees(response);
+        setEmployees(response.employees); // Update employee list
+        setTotalPages(response.totalPages); // Update total pages
       } catch (e) {
-        console.log(e);
+        console.log("Error fetching employees:", e);
       }
     };
+
     fetchEmployees();
-  }, []);
+  }, [currentPage]); // Refetch when page changes
 
   return (
     <MDBContainer>
@@ -47,7 +49,6 @@ export default function EmployeesTable() {
             <tr>
               <th scope="col">Photo</th>
               <th scope="col">Name</th>
-
               <th scope="col">Username</th>
               <th scope="col">Email</th>
               <th scope="col">Country</th>
@@ -57,7 +58,6 @@ export default function EmployeesTable() {
             </tr>
           </MDBTableHead>
           <MDBTableBody>
-            {/* Loop through employees array and render rows dynamically */}
             {employees?.map((employee) => {
               const {
                 id,
@@ -83,30 +83,22 @@ export default function EmployeesTable() {
                           className="rounded-circle"
                         />
                       ) : (
-                        <div className="">
-                          <MDBIcon
-                            icon="user"
-                            size="2x"
-                            className="text-primary"
-                          />
-                        </div>
+                        <MDBIcon
+                          icon="user"
+                          size="2x"
+                          className="text-primary"
+                        />
                       )}
                     </div>
                   </td>
                   <td>{`${firstName} ${lastName}`}</td>
-
                   <td>{username}</td>
                   <td>{email}</td>
                   <td>{country}</td>
                   <td>{accountType}</td>
                   <td>{contactNumber}</td>
                   <td>
-                    {/* Action buttons remain static and fixed */}
-
                     <div className="mb-2">
-                      {/* <MDBBtn color="primary" size="sm">
-                        Update <MDBIcon fas icon="pen-square" />
-                      </MDBBtn> */}
                       <UpdateEmployeeModal
                         setEmployees={setEmployees}
                         employees={employees}
@@ -127,6 +119,29 @@ export default function EmployeesTable() {
             })}
           </MDBTableBody>
         </MDBTable>
+
+        {/* Pagination Controls */}
+        <div className="d-flex p-3 justify-content-center mt-3">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            className="btn btn-primary mx-2"
+          >
+            Previous
+          </button>
+
+          <span className="align-self-center">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+            className="btn btn-primary mx-2"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </MDBContainer>
   );

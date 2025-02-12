@@ -24,10 +24,7 @@ export default function App({ id, name, employees, setEmployees }) {
   const handleDeleteEmployee = async (id) => {
     LazyLoading("Deleting employee");
     try {
-      await UseAxios(
-        "DELETE",
-        `https://employee-management-task.onrender.com/api/employees/${id}`
-      );
+      await UseAxios("DELETE", `/api/v1/employees/${id}`);
       //   console.log("Employee deleted successfully");
       setBasicModal(false);
       ApiResponseModal("Success", "Successfully Deleted", "success");

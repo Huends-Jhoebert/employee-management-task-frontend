@@ -51,10 +51,7 @@ export default function UpdateEmployeeModal({
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await UseAxios(
-          "GET",
-          "https://employee-management-task.onrender.com/countries/"
-        );
+        const response = await UseAxios("GET", "/api/v1/countries/");
         setCountries(response);
       } catch (e) {
         console.log(e);
@@ -81,13 +78,13 @@ export default function UpdateEmployeeModal({
   const onSubmit = (data) => {
     LazyLoading("Updating employee");
 
-    // console.log(data);
+    // console.log(data);Huends-0010
 
     const submitEmployee = async () => {
       try {
         const response = await UseAxios(
           "PUT",
-          `https://employee-management-task.onrender.com/api/employees/${employeeToUpdate.id}`,
+          `/api/v1/employees/${employeeToUpdate.id}`,
           data
         );
         ApiResponseModal("Success", "Successfully Updated", "success");
