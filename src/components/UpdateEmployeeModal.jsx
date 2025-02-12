@@ -20,6 +20,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import LazyLoading from "./LazyLoading";
 import ApiResponseModal from "./ApiResponseModal";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateEmployeeModal({
   setEmployees,
@@ -28,6 +29,7 @@ export default function UpdateEmployeeModal({
 }) {
   const [countries, setCountries] = useState([]);
   const [basicModal, setBasicModal] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -54,7 +56,12 @@ export default function UpdateEmployeeModal({
         const response = await UseAxios("GET", "/api/v1/countries/");
         setCountries(response);
       } catch (e) {
-        console.log(e);
+        navigate("/error", {
+          state: {
+            errorMessage:
+              "There was a problem fetching data. Please try again later.",
+          },
+        });
       }
     };
 
